@@ -42,6 +42,7 @@ import org.springframework.boot.loader.archive.Archive.EntryFilter;
 import org.springframework.boot.loader.archive.ExplodedArchive;
 import org.springframework.boot.loader.archive.JarFileArchive;
 import org.springframework.boot.loader.util.SystemPropertyUtils;
+import org.springframework.boot.loader.util.URLUtils;
 
 /**
  * {@link Launcher} for archives with user-configured classpath and main class via a
@@ -342,7 +343,8 @@ public class PropertiesLauncher extends Launcher {
 		for (Archive archive : archives) {
 			urls.add(archive.getUrl());
 		}
-		ClassLoader loader = new LaunchedURLClassLoader(urls.toArray(new URL[0]),
+		ClassLoader loader = new LaunchedURLClassLoader(
+				URLUtils.tryConvertJarURLtoFileURL(urls.toArray(new URL[0])),
 				getClass().getClassLoader());
 		debug("Classpath: " + urls);
 		String customLoaderClassName = getProperty("loader.classLoader");
